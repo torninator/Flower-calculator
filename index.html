@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flower Profit Calculator</title>
+    <style>
+        /* This section controls how the website looks */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f4f8;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+        .calculator-container {
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            padding: 30px;
+            width: 100%;
+            max-width: 600px;
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+        }
+        .header-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 15px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e2e8f0;
+            color: #4a5568;
+        }
+        .flower-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 15px;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .flower-name {
+            font-weight: 500;
+            color: #2d3748;
+        }
+        input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #cbd5e0;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 14px;
+            transition: border-color 0.2s;
+        }
+        input[type="number"]:focus {
+            outline: none;
+            border-color: #4299e1;
+            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.2);
+        }
+        .total-container {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 3px solid #2c3e50;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .total-label {
+            font-size: 20px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        .total-value {
+            font-size: 28px;
+            font-weight: bold;
+            color: #38a169;
+        }
+        /* This makes it look good on mobile phones */
+        @media (max-width: 500px) {
+            .header-row { display: none; }
+            .flower-row {
+                grid-template-columns: 1fr;
+                gap: 5px;
+                margin-bottom: 20px;
+                padding-bottom: 15px;
+                border-bottom: 1px solid #e2e8f0;
+            }
+            .flower-name { margin-bottom: 5px; font-weight: bold; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="calculator-container">
+    <h1>Flower Profit Calculator</h1>
+    
+    <div class="header-row">
+        <div>Flower Type</div>
+        <div>Price ($)</div>
+        <div>Quantity</div>
+    </div>
+
+    <div id="calculator-form"></div>
+
+    <div class="total-container">
+        <div class="total-label">Total Profit:</div>
+        <div class="total-value">$<span id="total-profit">0.00</span></div>
+    </div>
+</div>
+
+<script>
+    /* This section controls the math and logic */
+    
+    // The complete list of flowers from your CSV
+    const flowers = [
+        "Dhalia",
+        "Orchid",
+        "Crocus",
+        "Ban Orchid",
+        "Edelw",
+        "Heather",
+        "Ceibo",
+        "Cherry B",
+        "Peony",
+        "African V",
+        "Tribulus"
+    ];
+
+    const formContainer = document.getElementById('calculator-form');
+    const totalProfitDisplay = document.getElementById('total-profit');
+
+    // This loops through the list above and builds the HTML boxes for each flower automatically
+    flowers.forEach(flower => {
+        const row = document.createElement('div');
+        row.className = 'flower-row';
+        
+        row.innerHTML = `
+            <div class="flower-name">${flower}</div>
+            <input type="number" class="price-input" placeholder="0.00" min="0" step="0.01">
+            <input type="number" class="qty-input" placeholder="0" min="0">
+        `;
+        
+        formContainer.appendChild(row);
+    });
+
+    // Function to multiply Price * Qty for every flower and add them together
+    function calculateTotal() {
+        let grandTotal = 0;
+        const rows = document.querySelectorAll('.flower-row');
+        
+        rows.forEach(row => {
+            const price = parseFloat(row.querySelector('.price-input').value) || 0;
+            const qty = parseFloat(row.querySelector('.qty-input').value) || 0;
+            grandTotal += (price * qty);
+        });
+        
+        // Update the big green number at the bottom
+        totalProfitDisplay.textContent = grandTotal.toFixed(2);
+    }
+
+    // This makes the math calculate instantly every time you type a number
+    document.querySelectorAll('input').forEach(input => {
+        input.addEventListener('input', calculateTotal);
+    });
+</script>
+
+</body>
+</html>
