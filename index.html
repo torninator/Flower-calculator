@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flower Profit Calculator</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f4f8;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+        .calculator-container {
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            padding: 30px;
+            width: 100%;
+            max-width: 600px;
+        }
+        h1, h2 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+        .summary-box {
+            background-color: #edf2f7;
+            padding: 15px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #2d3748;
+            border-left: 5px solid #e53e3e;
+        }
+        .header-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 15px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e2e8f0;
+            color: #4a5568;
+        }
+        .flower-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 15px;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .flower-name {
+            font-weight: 500;
+            color: #2d3748;
+        }
+        input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #cbd5e0;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 14px;
+            transition: border-color 0.2s;
+        }
+        input[type="number"]:focus {
+            outline: none;
+            border-color: #4299e1;
+            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.2);
+        }
+        hr {
+            border: 0;
+            height: 2px;
+            background: #e2e8f0;
+            margin: 30px 0;
+        }
+        .sales-container {
+            background-color: #f7fafc;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+        .sales-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        .sales-label {
+            font-size: 14px;
+            font-weight: bold;
+            color: #4a5568;
+            margin-bottom: 5px;
+            display: block;
+        }
+        .sales-summary {
+            display: flex;
+            justify-content: space-between;
+            font-size: 18px;
+            font-weight: bold;
+            color: #2b6cb0;
+            padding-top: 15px;
+            border-top: 2px solid #cbd5e0;
+        }
+        .total-container {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #2c3e50;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+        }
+        .total-label {
+            font-size: 20px;
+            font-weight: bold;
+        }
+        .total-value {
+            font-size: 28px;
+            font-weight: bold;
+            color: #48bb78; 
+        }
+        .loss-value {
+            color: #fc8181; 
+        }
+        .clear-btn {
+            width: 100%;
+            padding: 10px;
+            margin-top: 15px;
+            background-color: #e2e8f0;
+            color: #4a5568;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.2s;
+        }
+        .clear-btn:hover {
+            background-color: #cbd5e0;
+        }
+
+        @media (max-width: 500px) {
+            .header-row { display: none; }
+            .flower-row {
+                grid-template-columns: 1fr;
+                gap: 5px;
+                margin-bottom: 20px;
+                padding-bottom: 15px;
+                border-bottom: 1px solid #e2e8f0;
+            }
+            .sales-row { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="calculator-container">
+    <h1>Flower Profit Calculator</h1>
+    
+    <div class="summary-box">
+        <div>Flower Set Total Cost:</div>
+        <div id="flower-total-cost">$0.00</div>
+    </div>
+
+    <div class="header-row">
+        <div>Flower Type</div>
+        <div>Cost per unit ($)</div>
+        <div>Quantity</div>
+    </div>
+    <div id="calculator-form"></div>
+
+    <hr>
+
+    <div class="sales-container">
+        <h2>Sales (Points)</h2>
+        <div class="sales-row">
+            <div>
+                <label class="sales-label">Points Sold</label>
+                <input type="number" id="points-sold" placeholder="0" min="0">
+            </div>
+            <div>
+                <label class="sales-label">Price per Point ($)</label>
+                <input type="number" id="point-price" placeholder="0.00" min="0" step="0.01">
+            </div>
+        </div>
+        <div class="sales-summary">
+            <div>Total Revenue:</div>
+            <div id="total-revenue">$0.00</div>
+        </div>
+    </div>
+
+    <div class="total-container">
+        <div class="total-label">Final Profit:</div>
+        <div class="total-value" id="final-profit">$0.00</div>
+    </div>
+
+    <button class="clear-btn" onclick="clearData()">Clear All Data</button>
+</div>
+
+<script>
+    const flowers = [
+        "Dhalia", "Orchid", "Crocus", "Ban Orchid", 
+        "Edelw", "Heather", "Ceibo", "Cherry B", 
+        "Peony", "African V", "Tribulus"
+    ];
+
+    const formContainer = document.getElementById('calculator-form');
+    
+    // Generate Flower Rows and assign unique IDs to each input so we can save them
+    flowers.forEach(flower => {
+        // Create a safe ID by replacing spaces with dashes (e.g., "Ban Orchid" -> "Ban-Orchid")
+        const safeId = flower.replace(/\s+/g, '-');
+        
+        const row = document.createElement('div');
+        row.className = 'flower-row';
+        row.innerHTML = `
+            <div class="flower-name">${flower}</div>
+            <input type="number" id="${safeId}-price" class="price-input" placeholder="0.00" min="0" step="0.01">
+            <input type="number" id="${safeId}-qty" class="qty-input" placeholder="0" min="0">
+        `;
+        formContainer.appendChild(row);
+    });
+
+    const flowerTotalCostDisplay = document.getElementById('flower-total-cost');
+    const totalRevenueDisplay = document.getElementById('total-revenue');
+    const finalProfitDisplay = document.getElementById('final-profit');
+    
+    const pointsSoldInput = document.getElementById('points-sold');
+    const pointPriceInput = document.getElementById('point-price');
+
+    // Main calculation function
+    function calculateAll() {
+        let flowerCost = 0;
+        const rows = document.querySelectorAll('.flower-row');
+        rows.forEach(row => {
+            const price = parseFloat(row.querySelector('.price-input').value) || 0;
+            const qty = parseFloat(row.querySelector('.qty-input').value) || 0;
+            flowerCost += (price * qty);
+        });
+        flowerTotalCostDisplay.textContent = "$" + flowerCost.toFixed(2);
+
+        const pointsSold = parseFloat(pointsSoldInput.value) || 0;
+        const pointPrice = parseFloat(pointPriceInput.value) || 0;
+        const totalRevenue = pointsSold * pointPrice;
+        totalRevenueDisplay.textContent = "$" + totalRevenue.toFixed(2);
+
+        const finalProfit = totalRevenue - flowerCost;
+        
+        finalProfitDisplay.textContent = (finalProfit < 0 ? "-$" : "$") + Math.abs(finalProfit).toFixed(2);
+        
+        if (finalProfit < 0) {
+            finalProfitDisplay.classList.add('loss-value');
+        } else {
+            finalProfitDisplay.classList.remove('loss-value');
+        }
+
+        // SAVE DATA: Every time calculation runs, save all inputs to Local Storage
+        document.querySelectorAll('input').forEach(input => {
+            if (input.id) {
+                localStorage.setItem(input.id, input.value);
+            }
+        });
+    }
+
+    // LOAD DATA: When the page opens, check if we have saved data and fill it in
+    function loadSavedData() {
+        document.querySelectorAll('input').forEach(input => {
+            if (input.id && localStorage.getItem(input.id) !== null) {
+                input.value = localStorage.getItem(input.id);
+            }
+        });
+        // Run the calculation once after loading the numbers to update the totals
+        calculateAll(); 
+    }
+
+    // CLEAR DATA: A function to wipe the memory if you want to start fresh
+    function clearData() {
+        if(confirm("Are you sure you want to clear all numbers?")) {
+            localStorage.clear();
+            document.querySelectorAll('input').forEach(input => {
+                input.value = "";
+            });
+            calculateAll();
+        }
+    }
+
+    // Add event listeners to all inputs to trigger calculation instantly
+    document.querySelectorAll('input').forEach(input => {
+        input.addEventListener('input', calculateAll);
+    });
+
+    // Run the load function immediately when the website starts
+    loadSavedData();
+</script>
+
+</body>
+</html>
